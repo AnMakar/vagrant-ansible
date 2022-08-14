@@ -1,0 +1,64 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
+
+Vagrant.configure("2") do |config|
+    #if Vagrant.has_plugin?("vagrant-proxyconf")
+    #config.proxy.http	  = "http://204.150.178.146:5068/"
+    #config.proxy.https    = "http://204.150.178.146:5068/"
+    #config.proxy.no_proxy = "localhost,127.0.0.1"
+    #end
+  config.vm.box = "https://app.vagrantup.com/centos/boxes/7/versions/2004.01/providers/virtualbox.box"
+
+#VM1
+#https://galaxy.ansible.com/clusterapps/freeipa_server
+#ansible-playbook ./provisioning/install_freeipa.yaml -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory
+# pip install jmespath
+  config.vm.define "vm1-freeipa.test.local" do |vm1|
+    vm1.vm.network "forwarded_port", guest: 80, host: 8080
+    vm1.vm.network "private_network", ip: "192.168.56.100"
+    vm1.vm.provider "virtualbox" do |vb|
+      vb.name = "vm1-freeipa"
+      vb.gui = false
+      vb.memory = "4096"
+      vb.cpus = 3
+    end
+    vm1.vm.provision "ansible" do |ansible|
+      ansible.playbook = "provisioning/install_freeipa.yaml"
+    end
+  end
+
+#VM2
+#https://galaxy.ansible.com/armar_reggans/foreman_basic_installer
+#https://github.com/riponbanik/ansible-role-foreman
+  config.vm.define "vm2-foreman.test.local" do |vm2|
+    vm2.vm.network "forwarded_port", guest: 80, host: 8081
+    vm2.vm.network "private_network", ip: "192.168.56.101"
+    vm2.vm.provider "virtualbox" do |vb|
+      vb.name = "vm2-foreman"
+      vb.gui = false
+      vb.memory = "3072"
+      vb.cpus = 2
+    end
+    vm2.vm.provision "ansible" do |ansible|
+      ansible.playbook = "provisioning/install_foreman.yaml"
+    end
+  end
+
+#VM3
+#https://hub.docker.com/r/zabbix/zabbix-appliance/
+  # config.vm.define "vm3_zabbix" do |vm3|
+  #   vm3.vm.network "forwarded_port", guest: 80, host: 8082
+  #   vm3.vm.network "private_network", ip: "192.168.56.102"
+  #   vm3.vm.provider "virtualbox" do |vb|
+  #     vb.name = "vm3_zabbix"
+  #     vb.gui = false
+  #     vb.memory = "2048"
+  #     vb.cpus = 2
+  #   end
+  #   vm3.vm.provision "ansible" do |ansible|
+  #     ansible.playbook = "provisioning/install_zabbix.yaml"
+  #   end
+  # end
+
+end

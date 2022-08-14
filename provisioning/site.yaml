@@ -1,0 +1,4 @@
+---
+- import_playbook: install_freeipa.yaml
+- import_playbook: install_foreman.yaml
+- import_playbook: install_zabbix.yaml

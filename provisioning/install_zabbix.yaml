@@ -1,0 +1,5 @@
+---
+- hosts: vm3_zabbix
+  become: true
+  roles:
+    - role: install_zabbix

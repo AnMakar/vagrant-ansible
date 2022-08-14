@@ -1,0 +1,73 @@
+---
+  - name: Set timezone to Europe/Moscow
+    timezone:
+      name: Europe/Moscow
+    become: true
+
+  - name: make sure chronyd is installed
+    yum:
+      name: chrony
+      state: latest
+      update_cache: yes
+
+  - name: Restart chronyd
+    service:
+      name: chronyd
+      state: restarted
+
+  - name: update hostname
+    hostname:
+      name: vm2-foreman.test.local
+
+  - name: "Build hosts file"
+    lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}}" state=present
+    when: hostvars[item].ansible_default_ipv4.address is defined
+    with_items:
+      - vm2-foreman.test.local
+
+  - name: Install firewalld
+    yum:
+      name: firewalld
+      state: latest
+
+  - name: start firewalld
+    service:
+      name: firewalld
+      state: started
+      enabled: yes
+    become: yes
+
+  - name: open ports
+    firewalld: port={{ item }} permanent=true state=enabled
+    with_items:
+      - 80/tcp
+      - 88/tcp
+      - 88/udp
+      - 389/tcp
+      - 464/tcp
+      - 464/udp
+      - 123/udp
+
+  - name: restart firewalld
+    service:
+      name: firewalld
+      state: restarted
+    become: yes
+
+  - name: install freeipa client
+    yum:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+    with_items:
+      - freeipa-client
+
+  # - name: Run the installer
+  #   action: command
+  #     {{ ipaserver_base_command }}
+  #     --server=vm1-freeipa.test.local
+  #     --realm {{ ipaserver_realm }}
+  #     --domain {{ ipaserver_domain }}
+  #     --hostname=vm2-foreman.test.local
+  #     --mkhomedir
+  #     --no-ntp

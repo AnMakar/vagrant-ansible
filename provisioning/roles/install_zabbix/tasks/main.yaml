@@ -1,0 +1,20 @@
+---
+- name: install docker
+  include_role: 
+    name: install_docker
+
+- name: start docker container from docker hub
+  docker_container:
+    name: "zabbix-appliance"
+    state: started
+    image: zabbix/zabbix-appliance #https://hub.docker.com/r/zabbix/zabbix-appliance/
+    ports:
+      - "80:80" # согласно заданию, порт 80 должен отсылать к Foreman, потом поменять
+      - "10051:10051"
+    detach: true
+#    networks:
+#      - name: zabbix-net
+#    env:
+#        DB_SERVER_HOST="mysql-server"
+#        MYSQL_USER="zabbix"
+#        MYSQL_PASSWORD="zabbix123"

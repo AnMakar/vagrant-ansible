@@ -1,0 +1,69 @@
+---
+  - name: install freeipa client
+    include_role:
+      name: install_freeipa_client
+
+  - name: "Disable SELinux, Configure FirewallD ports to ACCEPT [RHEL/CentOS]"
+    block:
+      - name: Disable SELinux
+        selinux:
+          state: disabled
+      - name: Configure Firewalld allowed ports
+        firewalld:
+          port: "{{ item }}"
+          permanent: yes
+          immediate: yes
+          state: enabled
+        with_items:
+            - "53/tcp"
+            - "67-69/udp"
+            - "80/tcp"
+            - "443/tcp"
+            - "3000/tcp"
+            - "3306/tcp"
+            - "5910-5930/tcp"
+            - "5432/tcp"
+            - "8140/tcp"
+            - "8443/tcp"
+
+  - name: restart firewalld
+    service:
+      name: firewalld
+      state: restarted
+    become: yes
+
+  - name: Add EPEL repository [CentOS]
+    yum:
+      name: epel-release, centos-release-scl-rh
+      state: present
+      update_cache: yes
+
+  # - name: Add EPEL repositories [CentOS]
+  #   yum:
+  #     name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+  #     state: present
+  #     update_cache: yes
+
+  - name: Add Foreman repositories [CentOS]
+    yum:
+      name: "https://yum.theforeman.org/releases/latest/el7/x86_64/foreman-release.rpm"
+      state: present
+      update_cache: yes
+
+  - name: Add Puppet repositories [CentOS]
+    yum:
+      name: "https://yum.puppet.com/puppet6-release-el-7.noarch.rpm"
+      state: present
+      update_cache: yes
+
+  - name: Install foreman packages [CentOS]
+    yum:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items:
+      - foreman-installer
+
+  - name: Run the installer
+    action: command
+      foreman-installer

@@ -1,0 +1,11 @@
+---
+- name: Playbook to configure IPA server
+  hosts: vm1-freeipa.test.local
+  become: true
+  pre_tasks:
+    - file: path=/etc/hosts state=absent
+    - file: path=/etc/hosts state=touch
+
+  roles:
+    - role: install_freeipa
+      state: present

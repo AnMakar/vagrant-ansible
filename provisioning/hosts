@@ -1,0 +1,8 @@
+[ipaserver]
+vm1-freeipa.test.local
+
+[ipaserver:vars]
+ipaserver_domain=test.local
+ipaserver_realm=TEST.LOCAL
+ipaadmin_password=MySecretPassword123
+ipadm_password=MySecretPassword234

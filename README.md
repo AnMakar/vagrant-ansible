@@ -133,11 +133,11 @@ vagrant up
 ### Задание 2  
 - [ ] Из браузера хостовой машины можно получить доступ к web оболочкам соответствующих
 сервисов по соответствующим портам.
-- [ ] Неважно откуда и как, но можно получить доступ к web оболочкам соответствующих сервисов.
-  - [ ] Даже если они развернуты не ansible role
+- [x] Неважно откуда и как, но можно получить доступ к web оболочкам соответствующих сервисов.
+  - [x] Даже если они развернуты не ansible role
   - [ ] Даже если они уже содержаться в vagrant box
-  - [ ] Даже если они в виде контейнеров
-  - [ ] Даже если они где-то развернуты руками...
+  - [x] Даже если они в виде контейнеров
+  - [x] Даже если они где-то развернуты руками...
 ### Задание 3  
 - [ ] Есть Dockerfile с сервисом zabbix
   - [ ] Есть кастомный Dockerfile который содержит в себе сервис Zabbix.
@@ -145,3 +145,13 @@ vagrant up
   - [x] Есть Docker контейнер который содержит в себе сервис Zabbix (например из Dockerhub).
 - [x] Из браузера хостовой машины можно получить доступ к web оболочке zabbix.
 - [x] Неважно откуда и как но можно получить доступ к web оболочке zabbix.  
+
+# Результат
+* FreeIPA недоступен в браузере хостовой машины, но доступен внутри виртуальной машины  
+![FreeIPA в браузере](https://github.com/AnMakar/vagrant-ansible/blob/main/images/freeipa_out_vm.png)
+![FreeIPA в виртуальной машине](https://github.com/AnMakar/vagrant-ansible/blob/main/images/freeipa_in_vm.png)
+* Foreman недоступен в браузере хостовой машины, но доступен внутри виртуальной машины
+![Foreman в браузере](https://github.com/AnMakar/vagrant-ansible/blob/main/images/foreman_out_vm.png)
+![Foreman в виртуальной машине](https://github.com/AnMakar/vagrant-ansible/blob/main/images/foreman_in_vm.png)
+* Zabbix доступен в браузере хостовой машины
+![Zabbix в браузере](https://github.com/AnMakar/vagrant-ansible/blob/main/images/zabbix_out_vm.png)
